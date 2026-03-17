@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RULET KAHİNİ | PREMIUM ANALİZ</title>
+    <style>
+        :root {
+            --accent-purple: #9d00ff;
+            --accent-red: #ff004c;
+            --gold: #ffd700;
+        }
+        
+        body {
+            margin: 0; padding: 0;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #050005 100%);
+            color: white; font-family: 'Segoe UI', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; overflow-x: hidden;
+        }
+
+        /* --- GİRİŞ EKRANI --- */
+        #login { 
+            position: fixed; inset: 0; background: #000; z-index: 9999; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+        }
+        .login-logo { width: 130px; filter: drop-shadow(0 0 15px var(--accent-purple)); margin-bottom: 20px; }
+        .login-title { color: var(--gold); font-size: 30px; margin-bottom: 25px; text-shadow: 0 0 15px var(--accent-red); font-weight: 900; }
+        input { 
+            padding: 18px; width: 280px; background: #111; border: 2px solid var(--accent-purple); 
+            color: var(--gold); border-radius: 15px; margin-bottom: 25px; text-align: center; font-size: 18px; outline: none;
+        }
+        .l-btn { 
+            padding: 15px 80px; background: linear-gradient(45deg, var(--accent-purple), var(--accent-red)); 
+            border: none; border-radius: 15px; font-weight: bold; font-size: 18px; color: white; cursor: pointer;
+            box-shadow: 0 5px 20px rgba(157, 0, 255, 0.5);
+        }
+
+        /* --- ANA ARAYÜZ --- */
+        .top-bar {
+            width: 100%; display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; box-sizing: border-box; background: rgba(0,0,0,0.8);
+            border-bottom: 2px solid var(--accent-purple);
+        }
+        .logo-img { height: 50px; border-radius: 50%; border: 1.5px solid var(--accent-red); box-shadow: 0 0 12px var(--accent-red); }
+        .brand-name { font-weight: 900; color: var(--gold); font-size: 20px; letter-spacing: 1px; }
+
+        .card {
+            width: 90%; max-width: 420px;
+            background: linear-gradient(135deg, rgba(60, 0, 90, 0.7), rgba(10, 0, 10, 0.95));
+            border: 2.5px solid var(--accent-red); border-radius: 25px; padding: 25px; margin: 25px 0;
+            box-shadow: 0 0 30px rgba(255, 0, 76, 0.3); text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .res-row { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 15px 0; }
+        .num-val { font-size: 50px; font-weight: 900; border: 3px solid var(--gold); padding: 5px 25px; border-radius: 15px; background: #000; }
+        .pred-val { font-size: 55px; font-weight: 900; color: #00ff9d; text-shadow: 0 0 20px #00ff9d; }
+        .warn { color: var(--gold); font-weight: bold; font-size: 15px; animation: blink 1.5s infinite; text-transform: uppercase; }
+        @keyframes blink { 50% { opacity: 0.2; } }
+
+        /* --- RULET MASASI (STANDART) --- */
+        .table-box {
+            background: #064e3b; padding: 15px; border-radius: 15px; border: 6px solid #4a3623;
+            width: 95%; max-width: 450px; box-shadow: 0 15px 40px #000;
+        }
+        .grid { display: grid; grid-template-columns: 55px repeat(12, 1fr); grid-template-rows: repeat(3, 50px); gap: 5px; }
+        .btn { display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; color: white; border-radius: 6px; cursor: pointer; border-bottom: 3px solid rgba(0,0,0,0.5); }
+        .zero { background: #15803d; grid-row: 1/4; border: 2.5px solid white; }
+        .red { background: #dc2626; }
+        .black { background: #1a1a1a; }
+    </style>
+</head>
+<body>
+
+    <div id="login">
+        <img src="https://i.ibb.co/XfXkXQ6X/1000162938.png" class="login-logo">
+        <div class="login-title">RULET KAHİNİ</div>
+        <input type="text" id="keyInput" placeholder="LİSANS ANAHTARI">
+        <button class="l-btn" onclick="verify()">GİRİŞ YAP</button>
+    </div>
+
+    <div class="top-bar">
+        <img src="https://i.ibb.co/XfXkXQ6X/1000162938.png" class="logo-img">
+        <div class="brand-name">RULET KAHİNİ</div>
+    </div>
+
+    <div class="card">
+        <div style="font-size:12px; color:var(--accent-purple); letter-spacing:4px; font-weight:bold;">KAHİN ALGORİTMASI</div>
+        <div class="res-row">
+            <div id="sel" class="num-val">?</div>
+            <div style="color:var(--gold); font-size:35px;">➤</div>
+            <div id="pre" class="pred-val">--</div>
+        </div>
+        <div class="warn">⚠️ 4'LÜ VEYA 5'Lİ KOMŞU ALINIZ ⚠️</div>
+    </div>
+
+    <div class="table-box">
+        <div class="grid" id="g">
+            <div class="btn zero" onclick="calc(0)">0</div>
+        </div>
+    </div>
+
+    <script>
+        // SABİT KEY LİSTESİ
+        const validKeys = [
+            "RULET-KAHİN-01", "RK-B7H2N4M8", "RK-K9P1L5V2", "RK-X3Z7R9T4", "RK-W2Q6F8D1",
+            "RK-Y5N8M3K2", "RK-J4H7G9L1", "RK-S2D5F8G9", "RK-A3S6D9F2", "RK-H4K7L2M5",
+            "RK-N8B3V6C9", "RK-X1Z4Q7W2", "RK-E5R8T3Y6", "RK-U9I2O4P7", "RK-L1K4J7H2",
+            "RK-G5F8D3S6", "RK-A9P2O5I8", "RK-M3N6B9V2", "RK-C5X8Z1Q4", "RK-W7E2R5T8",
+            "RK-Y3U6I9O2", "RK-P5L8K1J4", "RK-H7G2F5D8", "RK-S3A6Z9X2", "RK-C5V8B1N4",
+            "RK-M7Q2W5E8", "RK-R3T6Y9U2", "RK-I5O8P1L4", "RK-K7J2H5G8", "RK-F3D6S9A2",
+            "RK-Z5X8C1V4", "RK-B7N2M5Q8", "RK-W3E6R9T2", "RK-Y5U8I1O4", "RK-P7L2K5J8",
+            "RK-H3G6F9D2", "RK-S5A8Z1X4", "RK-C7V2B5N8", "RK-M1Q4W7E2", "RK-R5T8Y1U4",
+            "RK-I7O2P5L8", "RK-K3J6H9G2", "RK-F5D8S1A4", "RK-Z7X2C5V8", "RK-B1N4M7Q2",
+            "RK-W5E8R1T4", "RK-Y7U2I5O8", "RK-P1L4K7J2", "RK-H5G8F1D4", "RK-S7A2Z5X8",
+            "RK-C1V4B7N2", "RK-M5Q8W1E4", "RK-R7T2Y5U8", "RK-I1O4P7L2", "RK-K5J8H1G4",
+            "RK-F7D2S5A8", "RK-Z1X4C7V2", "RK-B5N8M1Q4", "RK-W7E2R5T8", "RK-Y1U4I7O2",
+            "RK-P5L8K1J4", "RK-H7G2F5D8", "RK-S1A4Z7X2", "RK-C5V8B1N4", "RK-M7Q2W5E8",
+            "RK-R1T4Y7U2", "RK-I5O8P1L4", "RK-K7J2H5G8", "RK-F1D4S7A2", "RK-Z5X8C1V4",
+            "RK-B7N2M5Q8", "RK-W1E4R7T2", "RK-Y5U8I1O4", "RK-P7L2K5J8", "RK-H1G4F7D2",
+            "RK-S5A8Z1X4", "RK-C7V2B5N8", "RK-M1Q4W7E2", "RK-R5T8Y1U4", "RK-I7O2P5L8",
+            "RK-K3J6H9G2", "RK-F5D8S1A4", "RK-Z7X2C5V8", "RK-B1N4M7Q2", "RK-W5E8R1T4",
+            "RK-Y7U2I5O8", "RK-P3L6K9J1", "RK-H2G5F8D3", "RK-S4A7Z1X5", "RK-C6V9B2N5",
+            "RK-M8Q1W4E7", "RK-R2T5Y8U1", "RK-I4O7P2L5", "RK-K6J9H2G5", "RK-F8D1S4A7",
+            "RK-Z2X5C8V1", "RK-B4N7M2Q5", "RK-W8E1R4T7", "RK-Y2U5I8O1", "RK-P4L7K2J5"
+        ];
+
+        const data = {0:"0-10",1:"8-9",2:"17-18",3:"18-30",4:"8-32",5:"14-27",6:"10-15",7:"13-29",8:"7-25",9:"0-30",10:"2-24",11:"3-24",12:"10-26",13:"31-32",14:"7-27",15:"8-31",16:"27-29",17:"2-35",18:"8-15",19:"1-4",20:"0-5",21:"31-34",22:"11-28",23:"15-20",24:"9-25",25:"2-14",26:"29-36",27:"20-34",28:"10-28",29:"30-31",30:"25-31",31:"13-26",32:"4-5",33:"28-36",34:"10-15",35:"21-28",36:"6-9"};
+        const reds = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+        const rows = [[3,6,9,12,15,18,21,24,27,30,33,36],[2,5,8,11,14,17,20,23,26,29,32,35],[1,4,7,10,13,16,19,22,25,28,31,34]];
+
+        const g = document.getElementById('g');
+        rows.forEach((row, rIdx) => {
+            row.forEach(n => {
+                const b = document.createElement('div');
+                b.className = `btn ${reds.includes(n) ? 'red' : 'black'}`;
+                b.innerText = n;
+                b.style.gridRow = rIdx + 1;
+                b.onclick = () => calc(n);
+                g.appendChild(b);
+            });
+        });
+
+        function verify() {
+            const val = document.getElementById('keyInput').value.trim().toUpperCase();
+            if(validKeys.includes(val)) {
+                document.getElementById('login').style.display = 'none';
+            } else {
+                alert("LİSANS ANAHTARI GEÇERSİZ!");
+            }
+        }
+
+        function calc(n) {
+            document.getElementById('sel').innerText = n;
+            document.getElementById('pre').innerText = data[n];
+        }
+    </script>
+</body>
+</html>
