@@ -24,6 +24,7 @@
             position: fixed; inset: 0; background: #000; z-index: 9999; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
         }
+        /* LOGO SORUNUNU ÇÖZEN KISIM: İnternet linki yerine yüklediğin dosyayı çeker */
         .login-logo { width: 130px; filter: drop-shadow(0 0 15px var(--accent-purple)); margin-bottom: 20px; }
         .login-title { color: var(--gold); font-size: 30px; margin-bottom: 25px; text-shadow: 0 0 15px var(--accent-red); font-weight: 900; }
         input { 
@@ -58,7 +59,6 @@
         .warn { color: var(--gold); font-weight: bold; font-size: 15px; animation: blink 1.5s infinite; text-transform: uppercase; }
         @keyframes blink { 50% { opacity: 0.2; } }
 
-        /* --- RULET MASASI (STANDART) --- */
         .table-box {
             background: #064e3b; padding: 15px; border-radius: 15px; border: 6px solid #4a3623;
             width: 95%; max-width: 450px; box-shadow: 0 15px 40px #000;
@@ -73,14 +73,14 @@
 <body>
 
     <div id="login">
-        <img src="https://i.ibb.co/XfXkXQ6X/1000162938.png" class="login-logo">
+        <img src="logo.png" class="login-logo">
         <div class="login-title">RULET KAHİNİ</div>
         <input type="text" id="keyInput" placeholder="LİSANS ANAHTARI">
         <button class="l-btn" onclick="verify()">GİRİŞ YAP</button>
     </div>
 
     <div class="top-bar">
-        <img src="https://i.ibb.co/XfXkXQ6X/1000162938.png" class="logo-img">
+        <img src="logo.png" class="logo-img">
         <div class="brand-name">RULET KAHİNİ</div>
     </div>
 
@@ -101,7 +101,6 @@
     </div>
 
     <script>
-        // SABİT KEY LİSTESİ
         const validKeys = [
             "RULET-KAHİN-01", "RK-B7H2N4M8", "RK-K9P1L5V2", "RK-X3Z7R9T4", "RK-W2Q6F8D1",
             "RK-Y5N8M3K2", "RK-J4H7G9L1", "RK-S2D5F8G9", "RK-A3S6D9F2", "RK-H4K7L2M5",
